@@ -1,5 +1,5 @@
 import json
-from flask import Flask,render_template,request,redirect,flash,url_for
+from flask import Flask,render_template,request,redirect,flash,url_for, session
 
 
 def loadClubs():
@@ -19,6 +19,7 @@ app.secret_key = 'something_special'
 
 competitions = loadCompetitions()
 clubs = loadClubs()
+clubs_booking = {}
 
 
 @app.route('/')
@@ -33,6 +34,8 @@ def showSummary():
     except IndexError:
         flash("Sorry, that email was not found.")
         return redirect(url_for('index'))
+    if not club["name"] in clubs_booking:
+        clubs_booking[club["name"]] = 0
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
@@ -53,11 +56,13 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     points = int(club["points"])
     placesRequired = int(request.form['places'])
-
-    if placesRequired <= points:
+    if clubs_booking[club["name"]] + placesRequired > 12:
+        flash(f"Not possible, you have already booked {clubs_booking[club['name']]} places, the total should be <= 12")
+    elif placesRequired <= points:
         competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
         points -= placesRequired
         club["points"] = str(points)
+        clubs_booking[club["name"]] += placesRequired
         flash('Great-booking complete!')
     else:
         flash('Not enough points!')
