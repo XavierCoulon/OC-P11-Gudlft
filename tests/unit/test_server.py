@@ -1,35 +1,58 @@
-from server import clubs_booking
+import server
 
 
-def test_login_email_unknown(client, email_unknown):
-	response = client.post("/showSummary", data={"email": email_unknown}, follow_redirects=True)
+def test_login_email_unknown(client, clubs):
+	server.clubs = clubs
+	response = client.post("/showSummary", data={"email": "email_unknown@gmail.com"}, follow_redirects=True)
 	data = response.data.decode()
 	assert response.status_code == 200
 	assert "Sorry, that email was not found." in data
 
 
-def test_login_email_known(client, email_known):
-	response = client.post("/showSummary", data={"email": email_known}, follow_redirects=True)
+def test_login_email_known(client, clubs):
+	server.clubs = clubs
+	response = client.post("/showSummary", data={"email": "club1@gmail.com"}, follow_redirects=True)
 	data = response.data.decode()
 	assert response.status_code == 200
-	assert f"Welcome, {email_known}" in data
+	assert f"Welcome, club1@gmail.com" in data
 
 
-def test_not_enough_points_to_purchase(client):
+def test_can_not_book_more_than_twelve_places_in_one_time(client, clubs, competitions, clubs_booking):
+	server.clubs = clubs
+	server.competitions = competitions
+	server.clubs_booking = clubs_booking
 	response = client.post(
 		"/purchasePlaces",
-		data={"competition": "Spring Festival", "club": "Iron Temple", "places": 5},
+		data={"competition": "Competition 1", "club": "Club 1", "places": 13},
 		follow_redirects=True
 	)
+
 	data = response.data.decode()
 	assert response.status_code == 200
-	assert "Not enough points!" in data
+	assert "Not possible, you have already booked" in data
 
 
-def test_enough_points_to_purchase(client):
+def test_can_not_book_more_than_twelve_places_in_multiple_times(client, clubs, competitions, clubs_booking):
+	server.clubs = clubs
+	server.competitions = competitions
+	server.clubs_booking = clubs_booking
 	response = client.post(
 		"/purchasePlaces",
-		data={"competition": "Spring Festival", "club": "Iron Temple", "places": 4},
+		data={"competition": "Competition 1", "club": "Club 2", "places": 3},
+		follow_redirects=True
+	)
+
+	data = response.data.decode()
+	assert response.status_code == 200
+	assert "Not possible, you have already booked" in data
+
+
+def test_enough_points_to_purchase(client, clubs, competitions):
+	server.clubs = clubs
+	server.competitions = competitions
+	response = client.post(
+		"/purchasePlaces",
+		data={"competition": "Competition 1", "club": "Club 3", "places": 1},
 		follow_redirects=True
 	)
 	data = response.data.decode()
@@ -37,34 +60,32 @@ def test_enough_points_to_purchase(client):
 	assert "Great-booking complete!" in data
 
 
-def test_can_not_book_more_than_twelve_places_in_one_time(client):
-	clubs_booking["Simply Lift"] = {"Spring Festival": 0}
+def test_not_enough_points_to_purchase(client, clubs, competitions):
+	server.clubs = clubs
+	server.competitions = competitions
 	response = client.post(
 		"/purchasePlaces",
-		data={"competition": "Spring Festival", "club": "Simply Lift", "places": 13},
+		data={"competition": "Competition 1", "club": "Club 4", "places": 1},
+		follow_redirects=True
+	)
+	data = response.data.decode()
+	assert response.status_code == 200
+	assert "Not enough points!" in data
+
+
+def test_not_enough_places_available_in_competition(client, clubs, clubs_booking, competitions):
+	server.clubs = clubs
+	server.competitions = competitions
+	server.clubs_booking = clubs_booking
+
+	response = client.post(
+		"/purchasePlaces",
+		data={"competition": "Competition 3", "club": "Club 1", "places": 6},
 		follow_redirects=True
 	)
 
 	data = response.data.decode()
 	assert response.status_code == 200
-	assert "Not possible, you have already booked" in data
-
-
-def test_can_not_book_more_than_twelve_places_in_multiple_times(client):
-	clubs_booking["Simply Lift"] = {"Spring Festival": 0}
-	client.post(
-		"/purchasePlaces",
-		data={"competition": "Spring Festival", "club": "Simply Lift", "places": 7},
-		follow_redirects=True
-	)
-	response = client.post(
-		"/purchasePlaces",
-		data={"competition": "Spring Festival", "club": "Simply Lift", "places": 6},
-		follow_redirects=True
-	)
-
-	data = response.data.decode()
-	assert response.status_code == 200
-	assert "Not possible, you have already booked" in data
+	assert "Not enough places available in the competition!" in data
 
 
