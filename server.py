@@ -1,5 +1,5 @@
 import json
-from flask import Flask,render_template,request,redirect,flash,url_for
+from flask import Flask,render_template,request,redirect,flash,url_for, session
 
 
 def loadClubs():
@@ -19,6 +19,7 @@ app.secret_key = 'something_special'
 
 competitions = loadCompetitions()
 clubs = loadClubs()
+clubs_booking = {}
 
 
 @app.route('/')
@@ -26,7 +27,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/showSummary',methods=['POST'])
+@app.route('/showSummary', methods=['POST'])
 def showSummary():
     try:
         club = [club for club in clubs if club['email'] == request.form['email']][0]
@@ -54,17 +55,27 @@ def purchasePlaces():
     points = int(club["points"])
     placesRequired = int(request.form['places'])
 
-    if placesRequired <= points:
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
-        points -= placesRequired
-        club["points"] = str(points)
-        flash('Great-booking complete!')
-    else:
+    if placesRequired > points:
         flash('Not enough points!')
+    else:
+        try:
+            places = clubs_booking[club["name"]][competition["name"]]
+            if places + placesRequired > 12:
+                flash(f"Not possible, you have already booked {places} places, the maximum must be <= 12")
+            else:
+                competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+                points -= placesRequired
+                club["points"] = str(points)
+                clubs_booking[club["name"]][competition["name"]] += placesRequired
+                flash('Great-booking complete!')
+        except KeyError:
+            competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
+            points -= placesRequired
+            club["points"] = str(points)
+            clubs_booking[club["name"]] = {competition["name"]: placesRequired}
+            flash('Great-booking complete!')
 
     return render_template('welcome.html', club=club, competitions=competitions)
-
-
 
 # TODO: Add route for points display
 
