@@ -9,22 +9,31 @@ def client():
 
 
 @pytest.fixture()
-def email_unknown():
-	return "email_unknown@gmail.com"
-
-
-@pytest.fixture()
-def email_known():
-	return "admin@irontemple.com"
-
-
-@pytest.fixture()
 def clubs():
-	clubs = {
-		"clubs": [
-			{"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"},
-			{"name": "Iron Temple", "email": "admin@irontemple.com", "points": "4"},
-			{"name": "She Lifts", "email": "kate@shelifts.co.uk", "points": "12"}
-		]
-	}
+	clubs = [
+				{"name": "Club 1", "email": "club1@gmail.com", "points": "13"},
+				{"name": "Club 2", "email": "club2@gmail.com", "points": "12"},
+				{"name": "Club 3", "email": "club3@gmail.com", "points": "2"},
+				{"name": "Club 4", "email": "club3@gmail.com", "points": "0"}
+			]
 	return clubs
+
+
+@pytest.fixture()
+def competitions():
+	competitions = [
+				{"name": "Competition 1", "date": "2020-03-27 10:00:00", "numberOfPlaces": "13"},
+				{"name": "Competition 2", "date": "2020-10-22 13:30:00", "numberOfPlaces": "4"},
+				{"name": "Competition 3", "date": "2020-10-22 13:30:00", "numberOfPlaces": "0"}
+			]
+	return competitions
+
+
+@pytest.fixture()
+def clubs_booking():
+	clubs_booking = {
+		"Club 1": {"Competition 1": 0, "Competition 2": 0, "Competition 3": 0},
+		"Club 2": {"Competition 1": 11, "Competition 2": 0, "Competition 3": 0},
+		"Club 3": {"Competition 1": 0, "Competition 2": 0, "Competition 3": 0}
+	}
+	return clubs_booking
