@@ -1,25 +1,25 @@
 import json
 from datetime import datetime
-from flask import Flask,render_template,request,redirect,flash,url_for, session
+from flask import Flask, render_template, request, redirect, flash, url_for, session
 
 
-def loadClubs():
+def load_clubs():
     with open('clubs.json') as c:
-         listOfClubs = json.load(c)['clubs']
-         return listOfClubs
+        list_of_clubs = json.load(c)['clubs']
+        return list_of_clubs
 
 
-def loadCompetitions():
+def load_competitions():
     with open('competitions.json') as comps:
-         listOfCompetitions = json.load(comps)['competitions']
-         return listOfCompetitions
+        list_of_competitions = json.load(comps)['competitions']
+        return list_of_competitions
 
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
-competitions = loadCompetitions()
-clubs = loadClubs()
+competitions = load_competitions()
+clubs = load_clubs()
 clubs_booking = {}
 
 
@@ -28,8 +28,8 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/showSummary', methods=['POST'])
-def showSummary():
+@app.route('/show_summary', methods=['POST'])
+def show_summary():
     try:
         club = [club for club in clubs if club['email'] == request.form['email']][0]
     except IndexError:
@@ -40,47 +40,47 @@ def showSummary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
-    foundClub = [c for c in clubs if c['name'] == club][0]
-    foundCompetition = [c for c in competitions if c['name'] == competition][0]
-    if foundClub and foundCompetition:
-        return render_template('booking.html', club=foundClub, competition=foundCompetition)
+    found_club = [c for c in clubs if c['name'] == club][0]
+    found_competition = [c for c in competitions if c['name'] == competition][0]
+    if found_club and found_competition:
+        return render_template('booking.html', club=found_club, competition=found_competition)
     else:
         flash("Something went wrong-please try again")
         return render_template('welcome.html', club=club, competitions=competitions)
 
 
-@app.route('/purchasePlaces', methods=['POST'])
-def purchasePlaces():
+@app.route('/purchase_places', methods=['POST'])
+def purchase_places():
     competition = [c for c in competitions if c['name'] == request.form['competition']][0]
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     points = int(club["points"])
-    placesRequired = int(request.form['places'])
+    places_required = int(request.form['places'])
 
     if datetime.now() > datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S"):
         flash(f"Not possible to book places on a post-dated competition - date: {competition['date']}.")
-    elif placesRequired > points:
+    elif places_required > points:
         flash('Not enough points!')
-    elif placesRequired > int(competition['numberOfPlaces']):
+    elif places_required > int(competition['numberOfPlaces']):
         flash('Not enough places available in the competition!')
     else:
         try:
             places = clubs_booking[club["name"]][competition["name"]]
-            if places + placesRequired > 12:
+            if places + places_required > 12:
                 flash(f"Not possible, you have already booked {places} places, the maximum must be <= 12")
             else:
-                competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-                points -= placesRequired
+                competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
+                points -= places_required
                 club["points"] = str(points)
-                clubs_booking[club["name"]][competition["name"]] += placesRequired
+                clubs_booking[club["name"]][competition["name"]] += places_required
                 flash('Great-booking complete!')
         except KeyError:
-            competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - placesRequired
-            points -= placesRequired
+            competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
+            points -= places_required
             club["points"] = str(points)
             try:
-                clubs_booking[club["name"]][competition["name"]] = placesRequired
+                clubs_booking[club["name"]][competition["name"]] = places_required
             except KeyError:
-                clubs_booking[club["name"]] = {competition["name"]: placesRequired}
+                clubs_booking[club["name"]] = {competition["name"]: places_required}
             flash('Great-booking complete!')
     print(clubs_booking)
     return render_template('welcome.html', club=club, competitions=competitions)
