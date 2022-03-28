@@ -8,7 +8,8 @@ class TestClass:
 		{"name": "Club 2", "email": "club2@gmail.com", "points": "12"},
 		{"name": "Club 3", "email": "club3@gmail.com", "points": "2"},
 		{"name": "Club 4", "email": "club4@gmail.com", "points": "0"},
-		{"name": "Club 5", "email": "club5@gmail.com", "points": "5"}
+		{"name": "Club 5", "email": "club5@gmail.com", "points": "5"},
+		{"name": "Club 6", "email": "club5@gmail.com", "points": "22"},
 	]
 
 	competitions_dataset = [
@@ -118,5 +119,8 @@ class TestClass:
 		assert response.status_code == 200
 		assert "Not possible to book places on a post-dated competition" in data
 
-
-
+	def test_display_clubs_points(self, client):
+		response = client.get("/points")
+		data = response.data.decode()
+		assert response.status_code == 200
+		assert "Club: Club 6 / points: 22" in data
