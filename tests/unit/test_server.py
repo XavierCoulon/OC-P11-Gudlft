@@ -89,3 +89,17 @@ def test_not_enough_places_available_in_competition(client, clubs, clubs_booking
 	assert "Not enough places available in the competition!" in data
 
 
+def test_places_booked_update_competition_points(client, clubs, clubs_booking, competitions):
+	server.clubs = clubs
+	server.competitions = competitions
+	server.clubs_booking = clubs_booking
+
+	response = client.post(
+		"/purchasePlaces",
+		data={"competition": "Competition 5", "club": "Club 5", "places": 5},
+		follow_redirects=True
+	)
+
+	data = response.data.decode()
+	assert response.status_code == 200
+	assert "Number of Places: 15" in data
