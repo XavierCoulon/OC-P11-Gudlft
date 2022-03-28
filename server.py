@@ -1,4 +1,5 @@
 import json
+from datetime import datetime
 from flask import Flask,render_template,request,redirect,flash,url_for, session
 
 
@@ -54,7 +55,10 @@ def purchasePlaces():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     points = int(club["points"])
     placesRequired = int(request.form['places'])
-    if placesRequired > points:
+
+    if datetime.now() > datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S"):
+        flash(f"Not possible to book places on a post-dated competition - date: {competition['date']}.")
+    elif placesRequired > points:
         flash('Not enough points!')
     elif placesRequired > int(competition['numberOfPlaces']):
         flash('Not enough places available in the competition!')
