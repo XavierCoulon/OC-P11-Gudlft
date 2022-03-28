@@ -103,3 +103,20 @@ def test_places_booked_update_competition_points(client, clubs, clubs_booking, c
 	data = response.data.decode()
 	assert response.status_code == 200
 	assert "Number of Places: 15" in data
+
+
+def test_can_not_book_places_on_post_dated_competition(client, clubs, clubs_booking, competitions):
+	server.clubs = clubs
+	server.competitions = competitions
+	server.clubs_booking = clubs_booking
+
+	response = client.post(
+		"/purchasePlaces",
+		data={"competition": "Competition 6", "club": "Club 5", "places": 5},
+		follow_redirects=True
+	)
+
+	data = response.data.decode()
+	assert response.status_code == 200
+	assert "Not possible to book places on a post-dated competition" in data
+

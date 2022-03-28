@@ -1,6 +1,8 @@
 import pytest
 import server
 
+from datetime import datetime
+
 
 @pytest.fixture()
 def client():
@@ -23,10 +25,11 @@ def clubs():
 @pytest.fixture()
 def competitions():
 	competitions = [
-				{"name": "Competition 1", "date": "2020-03-27 10:00:00", "numberOfPlaces": "13"},
-				{"name": "Competition 2", "date": "2020-10-22 13:30:00", "numberOfPlaces": "4"},
-				{"name": "Competition 3", "date": "2020-10-22 13:30:00", "numberOfPlaces": "0"},
-				{"name": "Competition 5", "date": "2020-10-22 13:30:00", "numberOfPlaces": "20"}
+				{"name": "Competition 1", "date": "2023-10-22 13:30:00", "numberOfPlaces": "13"},
+				{"name": "Competition 2", "date": "2023-10-22 13:30:00", "numberOfPlaces": "4"},
+				{"name": "Competition 3", "date": "2023-10-22 13:30:00", "numberOfPlaces": "0"},
+				{"name": "Competition 5", "date": "2023-10-22 13:30:00", "numberOfPlaces": "20"},
+				{"name": "Competition 6", "date": "2020-10-22 13:30:00", "numberOfPlaces": "20"}
 			]
 	return competitions
 
