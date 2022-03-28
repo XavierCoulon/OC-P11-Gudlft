@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, flash, url_for, session
+from flask import Flask, render_template, request, redirect, flash, url_for
 
 
 def load_clubs():
@@ -72,7 +72,7 @@ def purchase_places():
                 points -= places_required
                 club["points"] = str(points)
                 clubs_booking[club["name"]][competition["name"]] += places_required
-                flash('Great-booking complete!')
+                flash(f"Great-booking complete! {places_required} places booked.")
         except KeyError:
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
             points -= places_required
@@ -82,7 +82,6 @@ def purchase_places():
             except KeyError:
                 clubs_booking[club["name"]] = {competition["name"]: places_required}
             flash('Great-booking complete!')
-    print(clubs_booking)
     return render_template('welcome.html', club=club, competitions=competitions)
 
 # TODO: Add route for points display
