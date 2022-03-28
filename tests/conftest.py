@@ -14,7 +14,8 @@ def clubs():
 				{"name": "Club 1", "email": "club1@gmail.com", "points": "13"},
 				{"name": "Club 2", "email": "club2@gmail.com", "points": "12"},
 				{"name": "Club 3", "email": "club3@gmail.com", "points": "2"},
-				{"name": "Club 4", "email": "club3@gmail.com", "points": "0"}
+				{"name": "Club 4", "email": "club4@gmail.com", "points": "0"},
+				{"name": "Club 5", "email": "club5@gmail.com", "points": "5"}
 			]
 	return clubs
 
@@ -24,7 +25,8 @@ def competitions():
 	competitions = [
 				{"name": "Competition 1", "date": "2020-03-27 10:00:00", "numberOfPlaces": "13"},
 				{"name": "Competition 2", "date": "2020-10-22 13:30:00", "numberOfPlaces": "4"},
-				{"name": "Competition 3", "date": "2020-10-22 13:30:00", "numberOfPlaces": "0"}
+				{"name": "Competition 3", "date": "2020-10-22 13:30:00", "numberOfPlaces": "0"},
+				{"name": "Competition 5", "date": "2020-10-22 13:30:00", "numberOfPlaces": "20"}
 			]
 	return competitions
 
