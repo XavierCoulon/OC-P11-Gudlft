@@ -3,23 +3,18 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, flash, url_for
 
 
-def load_clubs():
-    with open('clubs.json') as c:
-        list_of_clubs = json.load(c)['clubs']
-        return list_of_clubs
-
-
-def load_competitions():
-    with open('competitions.json') as comps:
-        list_of_competitions = json.load(comps)['competitions']
-        return list_of_competitions
+def load_json(data):
+    with open(f"{data}.json") as c:
+        return json.load(c)[data]
 
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
 
-competitions = load_competitions()
-clubs = load_clubs()
+competitions = load_json('competitions')
+print(competitions)
+clubs = load_json('clubs')
+print(clubs)
 clubs_booking = {}
 
 
@@ -40,12 +35,12 @@ def show_summary():
 
 @app.route('/book/<competition>/<club>')
 def book(competition, club):
-    found_club = [c for c in clubs if c['name'] == club][0]
-    found_competition = [c for c in competitions if c['name'] == competition][0]
-    if found_club and found_competition:
+    try:
+        found_club = [c for c in clubs if c['name'] == club][0]
+        found_competition = [c for c in competitions if c['name'] == competition][0]
         return render_template('booking.html', club=found_club, competition=found_competition)
-    else:
-        flash("Something went wrong-please try again")
+    except IndexError:
+        flash("Competition or club not found")
         return render_template('welcome.html', club=club, competitions=competitions)
 
 

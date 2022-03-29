@@ -3,6 +3,12 @@ import server
 
 class TestClass:
 
+	load_dataset = [
+		{"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"},
+		{"name": "Iron Temple", "email": "admin@irontemple.com","points": "4"},
+		{"name": "She Lifts","email": "kate@shelifts.co.uk","points": "12"}
+	]
+
 	clubs_dataset = [
 		{"name": "Club 1", "email": "club1@gmail.com", "points": "13"},
 		{"name": "Club 2", "email": "club2@gmail.com", "points": "12"},
@@ -32,6 +38,15 @@ class TestClass:
 		server.competitions = cls.competitions_dataset
 		server.clubs_booking = cls.clubs_booking_dataset
 
+	def test_load_json(self):
+		assert server.load_json("tests/unit/load_dataset") == self.load_dataset
+
+	def test_index(self, client):
+		response = client.get("/")
+		data = response.data.decode()
+		assert response.status_code == 200
+		assert "Welcome to the GUDLFT Registration Portal" in data
+
 	def test_login_email_unknown(self, client):
 		response = client.post("/show_summary", data={"email": "email_unknown@gmail.com"}, follow_redirects=True)
 		data = response.data.decode()
@@ -43,6 +58,18 @@ class TestClass:
 		data = response.data.decode()
 		assert response.status_code == 200
 		assert f"Welcome, club1@gmail.com" in data
+
+	def test_book_club_competition_found(self, client):
+		response = client.get(f"/book/{self.competitions_dataset[0]['name']}/{self.clubs_dataset[0]['name']}")
+		data = response.data.decode()
+		assert response.status_code == 200
+		assert f"Places available: {self.competitions_dataset[0]['numberOfPlaces']}" in data
+
+	def test_book_club_competition_not_found(self, client):
+		response = client.get("/book/competition_not_existing/club_not_existing")
+		data = response.data.decode()
+		assert response.status_code == 200
+		assert "Competition or club not found" in data
 
 	def test_can_not_book_more_than_twelve_places_in_one_time(self, client):
 		response = client.post(
@@ -124,3 +151,9 @@ class TestClass:
 		data = response.data.decode()
 		assert response.status_code == 200
 		assert "Club: Club 6 / points: 22" in data
+
+	def test_logout(self, client):
+		response = client.get("/logout", follow_redirects=True)
+		data = response.data.decode()
+		assert response.status_code == 200
+		assert "Welcome to the GUDLFT Registration Portal" in data
