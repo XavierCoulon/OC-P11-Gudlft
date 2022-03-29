@@ -12,9 +12,7 @@ app = Flask(__name__)
 app.secret_key = 'something_special'
 
 competitions = load_json('competitions')
-print(competitions)
 clubs = load_json('clubs')
-print(clubs)
 clubs_booking = {}
 
 
