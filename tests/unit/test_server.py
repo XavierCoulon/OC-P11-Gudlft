@@ -3,11 +3,11 @@ from ... import server
 
 class TestClass:
 
-	load_dataset = [
-		{"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"},
-		{"name": "Iron Temple", "email": "admin@irontemple.com", "points": "4"},
-		{"name": "She Lifts","email": "kate@shelifts.co.uk", "points": "12"}
-	]
+	# load_dataset = [
+	# 	{"name": "Simply Lift", "email": "john@simplylift.co", "points": "13"},
+	# 	{"name": "Iron Temple", "email": "admin@irontemple.com", "points": "4"},
+	# 	{"name": "She Lifts","email": "kate@shelifts.co.uk", "points": "12"}
+	# ]
 
 	clubs_dataset = [
 		{"name": "Club 1", "email": "club1@gmail.com", "points": "13"},
@@ -38,8 +38,8 @@ class TestClass:
 		server.competitions = cls.competitions_dataset
 		server.clubs_booking = cls.clubs_booking_dataset
 
-	def test_load_json(self):
-		assert server.load_json("tests/unit/load_dataset") == self.load_dataset
+	def test_load_json(self, load_dataset):
+		assert server.load_json("tests/unit/load_dataset") == load_dataset
 
 	def test_index(self, client):
 		response = client.get("/")
