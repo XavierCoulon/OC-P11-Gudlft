@@ -5,6 +5,7 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
+POINTS_BY_PLACE = 3
 
 
 def load_json(data):
@@ -49,10 +50,11 @@ def purchase_places():
     club = [c for c in clubs if c['name'] == request.form['club']][0]
     points = int(club["points"])
     places_required = int(request.form['places'])
+    points_required = places_required * POINTS_BY_PLACE
 
     if datetime.now() > datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S"):
         flash(f"Not possible to book places on a post-dated competition - date: {competition['date']}.")
-    elif places_required > points:
+    elif points_required > points:
         flash('Not enough points!')
     elif places_required > int(competition['numberOfPlaces']):
         flash('Not enough places available in the competition!')
@@ -63,13 +65,13 @@ def purchase_places():
                 flash(f"Not possible, you have already booked {places} places, the maximum must be <= 12")
             else:
                 competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
-                points -= places_required
+                points -= points_required
                 club["points"] = str(points)
                 clubs_booking[club["name"]][competition["name"]] += places_required
                 flash(f"Great-booking complete! {places_required} places booked.")
         except KeyError:
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
-            points -= places_required
+            points -= points_required
             club["points"] = str(points)
             try:
                 clubs_booking[club["name"]][competition["name"]] = places_required
