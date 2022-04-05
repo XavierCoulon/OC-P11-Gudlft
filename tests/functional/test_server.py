@@ -1,4 +1,5 @@
 from ... import server
+from ..conftest import clubs_booking_dataset
 
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -8,7 +9,12 @@ from webdriver_manager.chrome import ChromeDriverManager
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
 
-class TestFunctional():
+class TestFunctional:
+
+	def setup_method(self, method):
+		server.clubs = server.load_json("tests/clubs_dataset")
+		server.competitions = server.load_json("tests/competitions_dataset")
+		server.clubs_booking = clubs_booking_dataset
 
 	def test_main_user_story(self):
 		driver.get("http://127.0.0.1:5000")

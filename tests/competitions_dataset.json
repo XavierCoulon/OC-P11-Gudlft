@@ -1,0 +1,7 @@
+{"tests/competitions_dataset":[
+   {"name": "Competition 1", "date": "2023-10-22 13:30:00", "numberOfPlaces": "18"},
+    {"name": "Competition 2", "date": "2023-10-22 13:30:00", "numberOfPlaces": "4"},
+    {"name": "Competition 3", "date": "2023-10-22 13:30:00", "numberOfPlaces": "0"},
+    {"name": "Competition 5", "date": "2023-10-22 13:30:00", "numberOfPlaces": "20"},
+    {"name": "Competition 6", "date": "2020-10-22 13:30:00", "numberOfPlaces": "20"}
+]}

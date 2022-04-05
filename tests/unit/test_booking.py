@@ -1,20 +1,19 @@
-from ..conftest import clubs_dataset, competitions_dataset, clubs_booking_dataset
+from ..conftest import clubs_booking_dataset
 from ... import server
 
 
 class TestBookingClass:
 
-	@classmethod
-	def setup_class(cls):
-		server.clubs = clubs_dataset
-		server.competitions = competitions_dataset
+	def setup_method(self, method):
+		server.clubs = server.load_json("tests/clubs_dataset")
+		server.competitions = server.load_json("tests/competitions_dataset")
 		server.clubs_booking = clubs_booking_dataset
 
 	def test_book_club_competition_found(self, client):
-		response = client.get(f"/book/{competitions_dataset[0]['name']}/{clubs_dataset[0]['name']}")
+		response = client.get(f"/book/Competition 1/Club 1")
 		data = response.data.decode()
 		assert response.status_code == 200
-		assert f"Places available: {competitions_dataset[0]['numberOfPlaces']}" in data
+		assert f"Places available: 18" in data
 
 	def test_book_club_competition_not_found(self, client):
 		response = client.get("/book/competition_not_existing/club_not_existing")
@@ -51,6 +50,7 @@ class TestBookingClass:
 			follow_redirects=True
 		)
 		data = response.data.decode()
+
 		assert response.status_code == 200
 		assert "Great-booking complete!" in data
 
@@ -96,3 +96,4 @@ class TestBookingClass:
 		data = response.data.decode()
 		assert response.status_code == 200
 		assert "Not possible to book places on a post-dated competition" in data
+
