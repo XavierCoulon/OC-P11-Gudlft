@@ -1,16 +1,8 @@
-from ..conftest import clubs_booking_dataset
-from ... import server
-
 
 class TestBookingClass:
 
-	def setup_method(self, method):
-		server.clubs = server.load_json("tests/clubs_dataset")
-		server.competitions = server.load_json("tests/competitions_dataset")
-		server.clubs_booking = clubs_booking_dataset
-
-	def test_book_club_competition_found(self, client):
-		response = client.get(f"/book/Competition 1/Club 1")
+	def test_book_club_competition_known(self, client):
+		response = client.get(f"/book/Competition Known/Club Known")
 		data = response.data.decode()
 		assert response.status_code == 200
 		assert f"Places available: 18" in data
@@ -24,18 +16,18 @@ class TestBookingClass:
 	def test_can_not_book_more_than_twelve_places_in_one_time(self, client):
 		response = client.post(
 			"/purchase_places",
-			data={"competition": "Competition 1", "club": "Club 1", "places": 13},
+			data={"competition": "Competition Can Not Book More Than 12", "club": "Club Can Not Book More Than 12", "places": 13},
 			follow_redirects=True
 		)
 
 		data = response.data.decode()
 		assert response.status_code == 200
-		assert "Not possible, you have already booked" in data
+		assert "Can not book more than 12 places!" in data
 
 	def test_can_not_book_more_than_twelve_places_in_multiple_times(self, client):
 		response = client.post(
 			"/purchase_places",
-			data={"competition": "Competition 1", "club": "Club 2", "places": 3},
+			data={"competition": "Competition Can Not Book More Than 12", "club": "Club Can Not Book More Than 12", "places": 3},
 			follow_redirects=True
 		)
 
@@ -46,7 +38,7 @@ class TestBookingClass:
 	def test_enough_points_to_purchase(self, client):
 		response = client.post(
 			"/purchase_places",
-			data={"competition": "Competition 1", "club": "Club 3", "places": 1},
+			data={"competition": "Competition Enough Points", "club": "Club Enough Points", "places": 1},
 			follow_redirects=True
 		)
 		data = response.data.decode()
@@ -57,7 +49,7 @@ class TestBookingClass:
 	def test_not_enough_points_to_purchase(self, client):
 		response = client.post(
 			"/purchase_places",
-			data={"competition": "Competition 1", "club": "Club 4", "places": 1},
+			data={"competition": "Competition Not Enough Points", "club": "Club Not Enough Points", "places": 1},
 			follow_redirects=True
 		)
 		data = response.data.decode()
@@ -67,7 +59,7 @@ class TestBookingClass:
 	def test_not_enough_places_available_in_competition(self, client):
 		response = client.post(
 			"/purchase_places",
-			data={"competition": "Competition 3", "club": "Club 1", "places": 6},
+			data={"competition": "Competition Not Enough Places", "club": "Club Enough Points", "places": 2},
 			follow_redirects=True
 		)
 
@@ -78,18 +70,18 @@ class TestBookingClass:
 	def test_places_booked_update_competition_points(self, client):
 		response = client.post(
 			"/purchase_places",
-			data={"competition": "Competition 5", "club": "Club 5", "places": 5},
+			data={"competition": "Competition Places Updated", "club": "Club Places Updated", "places": 3},
 			follow_redirects=True
 		)
 
 		data = response.data.decode()
 		assert response.status_code == 200
-		assert "Number of Places: 15" in data
+		assert "Number of Places: 7" in data
 
 	def test_can_not_book_places_on_post_dated_competition(self, client):
 		response = client.post(
 			"/purchase_places",
-			data={"competition": "Competition 6", "club": "Club 5", "places": 5},
+			data={"competition": "Competition Postdated", "club": "Club Postdated", "places": 1},
 			follow_redirects=True
 		)
 

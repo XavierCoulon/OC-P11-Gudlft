@@ -1,9 +1,11 @@
 {"tests/clubs_dataset":[
-    {"name": "Club 1", "email": "club1@gmail.com", "points": "40"},
-    {"name": "Club 2", "email": "club2@gmail.com", "points": "12"},
-    {"name": "Club 3", "email": "club3@gmail.com", "points": "3"},
-    {"name": "Club 4", "email": "club4@gmail.com", "points": "1"},
-    {"name": "Club 5", "email": "club5@gmail.com", "points": "16"},
-    {"name": "Club 6", "email": "club6@gmail.com", "points": "22"},
-    {"name": "Club 7", "email": "club7@gmail.com", "points": "3"}
+    {"name": "Club Known", "email": "email_known@gmail.com", "points": "40"},
+    {"name": "Display Points 10", "email": "", "points": "10"},
+    {"name": "Club Can Not Book More Than 12", "email": "", "points": "50"},
+    {"name": "Club Enough Points", "email": "", "points": "20"},
+    {"name": "Club Not Enough Points", "email": "", "points": "2"},
+    {"name": "Club Places Updated", "email": "", "points": "30"},
+    {"name": "Club Postdated", "email": "", "points": "3"},
+    {"name": "Club Log And Purchase", "email": "log_and_purchase@gmail.com", "points": "3"},
+    {"name": "Club Main Use Case", "email": "main_use_case@gmail.com", "points": "50"}
 ]}

@@ -1,4 +1,5 @@
 import json
+import os
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, flash, url_for
 
@@ -16,6 +17,15 @@ def load_json(data):
 competitions = load_json('competitions')
 clubs = load_json('clubs')
 clubs_booking = {}
+
+if os.environ["ENV"] == "TEST":
+    clubs = load_json("tests/clubs_dataset")
+    competitions = load_json("tests/competitions_dataset")
+    clubs_booking = {
+        "Club Can Not Book More Than 12": {"Competition Can Not Book More Than 12": 10, "Competition 2": 0, "Competition 3": 0},
+        "Club 2": {"Competition 1": 11, "Competition 2": 0, "Competition 3": 0},
+        "Club 3": {"Competition 1": 0, "Competition 2": 0, "Competition 3": 0}
+    }
 
 
 @app.route('/')
@@ -54,6 +64,8 @@ def purchase_places():
 
     if datetime.now() > datetime.strptime(competition["date"], "%Y-%m-%d %H:%M:%S"):
         flash(f"Not possible to book places on a post-dated competition - date: {competition['date']}.")
+    elif places_required > 12:
+        flash('Can not book more than 12 places!')
     elif points_required > points:
         flash('Not enough points!')
     elif places_required > int(competition['numberOfPlaces']):
@@ -81,7 +93,6 @@ def purchase_places():
     return render_template('welcome.html', club=club, competitions=competitions)
 
 
-# TODO: Add route for points display
 @app.route('/points')
 def display_points():
     return render_template('points.html', clubs=clubs)
@@ -90,3 +101,4 @@ def display_points():
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
+
