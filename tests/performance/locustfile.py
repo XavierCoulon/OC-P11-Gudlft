@@ -1,5 +1,4 @@
 from locust import HttpUser, task
-#from ... import server
 
 
 class PerfTest(HttpUser):
@@ -17,12 +16,12 @@ class PerfTest(HttpUser):
 
 	@task
 	def perf_login(self):
-		self.client.post("/show_summary", data={"email": "john@simplylift.co"})
+		self.client.post("/show_summary", data={"email": "locust@gmail.com"})
 
 	@task
 	def perf_book(self):
-		self.client.get("/book/Spring Festival/Simply Lift")
+		self.client.get("/book/Competition Locust/Club Locust")
 
 	@task
 	def perf_purchase(self):
-		self.client.post("/purchase_places", data={"competition": "Spring Festival", "club": "Simply Lift", "places": 0})
+		self.client.post("/purchase_places", data={"competition": "Competition Locust", "club": "Club Locust", "places": 0})
