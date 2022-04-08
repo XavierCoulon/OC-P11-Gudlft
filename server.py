@@ -22,7 +22,10 @@ if os.environ["ENV"] == "TEST":
     clubs = load_json("tests/clubs_dataset")
     competitions = load_json("tests/competitions_dataset")
     clubs_booking = {
-        "Club Can Not Book More Than 12": {"Competition Can Not Book More Than 12": 10, "Competition 2": 0, "Competition 3": 0},
+        "Club Can Not Book More Than 12": {
+            "Competition Can Not Book More Than 12": 10,
+            "Competition 2": 0,
+            "Competition 3": 0},
         "Club 2": {"Competition 1": 11, "Competition 2": 0, "Competition 3": 0},
         "Club 3": {"Competition 1": 0, "Competition 2": 0, "Competition 3": 0}
     }
@@ -73,22 +76,16 @@ def purchase_places():
     else:
         try:
             places = clubs_booking[club["name"]][competition["name"]]
-            if places + places_required > 12:
-                flash(f"Not possible, you have already booked {places} places, the maximum must be <= 12")
-            else:
-                competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
-                points -= points_required
-                club["points"] = str(points)
-                clubs_booking[club["name"]][competition["name"]] += places_required
-                flash(f"Great-booking complete! {places_required} places booked.")
         except KeyError:
+            clubs_booking[club["name"]] = {competition["name"]: 0}
+            places = 0
+        if places + places_required > 12:
+            flash(f"Not possible, you have already booked {places} places, the maximum must be <= 12")
+        else:
             competition['numberOfPlaces'] = int(competition['numberOfPlaces']) - places_required
             points -= points_required
             club["points"] = str(points)
-            try:
-                clubs_booking[club["name"]][competition["name"]] = places_required
-            except KeyError:
-                clubs_booking[club["name"]] = {competition["name"]: places_required}
+            clubs_booking[club["name"]][competition["name"]] += places_required
             flash('Great-booking complete!')
     return render_template('welcome.html', club=club, competitions=competitions)
 
@@ -101,4 +98,3 @@ def display_points():
 @app.route('/logout')
 def logout():
     return redirect(url_for('index'))
-

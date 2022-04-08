@@ -1,5 +1,3 @@
-from ... import server
-
 
 class TestIntegrationClass:
 
@@ -7,7 +5,7 @@ class TestIntegrationClass:
 		response = client.post("/show_summary", data={"email": "log_and_purchase@gmail.com"}, follow_redirects=True)
 		data = response.data.decode()
 		assert response.status_code == 200
-		assert f"Welcome, log_and_purchase@gmail.com" in data
+		assert "Welcome, log_and_purchase@gmail.com" in data
 
 		response = client.post(
 			"/purchase_places",
@@ -23,7 +21,7 @@ class TestIntegrationClass:
 		response = client.post("/show_summary", data={"email": "log_and_purchase@gmail.com"}, follow_redirects=True)
 		data = response.data.decode()
 		assert response.status_code == 200
-		assert f"Welcome, log_and_purchase@gmail.com" in data
+		assert "Welcome, log_and_purchase@gmail.com" in data
 
 		response = client.get("/logout", follow_redirects=True)
 		data = response.data.decode()

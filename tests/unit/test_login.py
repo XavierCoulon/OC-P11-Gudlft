@@ -17,7 +17,7 @@ class TestLoginClass:
 		response = client.post("/show_summary", data={"email": "email_known@gmail.com"}, follow_redirects=True)
 		data = response.data.decode()
 		assert response.status_code == 200
-		assert f"Welcome, email_known@gmail.com" in data
+		assert "Welcome, email_known@gmail.com" in data
 
 	def test_display_clubs_points(self, client):
 		response = client.get("/points")
