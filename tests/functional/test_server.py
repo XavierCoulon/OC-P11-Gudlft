@@ -19,7 +19,13 @@ class TestFunctional:
 		return el.submit()
 
 	def test_bout_en_bout(self):
-
+		"""
+		Use case:
+			- log in
+			- book 12 places on competion
+			- try to book one more place on the same competition (reject)
+			- book 1 place on another competition
+		"""
 		self.driver.get("http://127.0.0.1:5000")
 		assert "GUDLFT Registration" in self.driver.title
 

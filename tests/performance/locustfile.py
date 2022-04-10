@@ -2,6 +2,10 @@ from locust import HttpUser, task
 
 
 class PerfTest(HttpUser):
+	"""
+	Performance tests on main urls
+	"""
+
 	@task
 	def perf_index(self):
 		self.client.get("/")

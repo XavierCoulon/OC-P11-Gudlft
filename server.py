@@ -6,10 +6,20 @@ from flask import Flask, render_template, request, redirect, flash, url_for
 
 app = Flask(__name__)
 app.secret_key = 'something_special'
+
+# To set up the number of points required to book a place
 POINTS_BY_PLACE = 3
 
 
 def load_json(data):
+    """
+
+    Args:
+        data: JSON file path
+
+    Returns:
+        list of dict.
+    """
     with open(f"{data}.json") as c:
         return json.load(c)[data]
 
@@ -18,6 +28,7 @@ competitions = load_json('competitions')
 clubs = load_json('clubs')
 clubs_booking = {}
 
+# Set up some datas for testing
 if os.environ["ENV"] == "TEST":
     clubs = load_json("tests/clubs_dataset")
     competitions = load_json("tests/competitions_dataset")
@@ -75,6 +86,7 @@ def purchase_places():
         flash('Not enough places available in the competition!')
     else:
         try:
+            # if places have already been booked for this club
             places = clubs_booking[club["name"]][competition["name"]]
         except KeyError:
             clubs_booking[club["name"]] = {competition["name"]: 0}
