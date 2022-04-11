@@ -1,0 +1,12 @@
+{"tests/clubs_dataset":[
+    {"name": "Club Known", "email": "email_known@gmail.com", "points": "40"},
+    {"name": "Display Points 10", "email": "", "points": "10"},
+    {"name": "Club Can Not Book More Than 12", "email": "", "points": "50"},
+    {"name": "Club Enough Points", "email": "", "points": "20"},
+    {"name": "Club Not Enough Points", "email": "", "points": "2"},
+    {"name": "Club Places Updated", "email": "", "points": "30"},
+    {"name": "Club Postdated", "email": "", "points": "3"},
+    {"name": "Club Log And Purchase", "email": "log_and_purchase@gmail.com", "points": "3"},
+    {"name": "Club Main Use Case", "email": "main_use_case@gmail.com", "points": "50"},
+    {"name": "Club Locust", "email": "locust@gmail.com", "points": "1000"}
+]}

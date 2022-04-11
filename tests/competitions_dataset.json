@@ -1,0 +1,13 @@
+{"tests/competitions_dataset":[
+  {"name": "Competition Known", "date": "2023-10-22 13:30:00", "numberOfPlaces": "18"},
+  {"name": "Competition Can Not Book More Than 12", "date": "2023-10-22 13:30:00", "numberOfPlaces": "18"},
+  {"name": "Competition Not Enough Places", "date": "2023-10-22 13:30:00", "numberOfPlaces": "1"},
+  {"name": "Competition Enough Points", "date": "2023-10-22 13:30:00", "numberOfPlaces": "1"},
+  {"name": "Competition Not Enough Points", "date": "2023-10-22 13:30:00", "numberOfPlaces": "1"},
+  {"name": "Competition Places Updated", "date": "2023-10-22 13:30:00", "numberOfPlaces": "10"},
+  {"name": "Competition Postdated", "date": "2020-10-22 13:30:00", "numberOfPlaces": "20"},
+  {"name": "Competition Log And Purchase", "date": "2023-10-22 13:30:00", "numberOfPlaces": "10"},
+  {"name": "Competition Main Use Case 1", "date": "2023-10-22 13:30:00", "numberOfPlaces": "20"},
+  {"name": "Competition Main Use Case 2", "date": "2023-10-22 13:30:00", "numberOfPlaces": "1"},
+  {"name": "Competition Locust", "date": "2023-10-22 13:30:00", "numberOfPlaces": "500"}
+]}
